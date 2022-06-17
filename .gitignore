@@ -164,3 +164,9 @@ config.cmake
 
 # model file
 *.pth
+
+#istvan:
+examples/pytorch/r-dgmg/results/
+examples/pytorch/r-dgmg/docs/
+examples/pytorch/r-dgmg/bug_2.py
+examples/pytorch/r-dgmg/bug.py
