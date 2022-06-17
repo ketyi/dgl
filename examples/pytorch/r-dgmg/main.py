@@ -13,6 +13,7 @@ from torch.utils.data import DataLoader
 from torch.nn.utils import clip_grad_norm_
 
 from model import DGMG
+from heterograph import HeteroGraphDataset
 
 
 def main(opts):
@@ -20,9 +21,9 @@ def main(opts):
 
     # Setup dataset and data loader
     if opts['dataset'] == 'cycles':
-        from cycles import CycleDataset, CycleModelEvaluation, CyclePrinting
+        from cycles import CycleModelEvaluation, CyclePrinting
 
-        dataset = CycleDataset(fname=opts['path_to_dataset'])
+        dataset = HeteroGraphDataset()
         evaluator = CycleModelEvaluation(v_min=opts['min_size'],
                                          v_max=opts['max_size'],
                                          dir=opts['log_dir'])
@@ -31,7 +32,7 @@ def main(opts):
     else:
         raise ValueError('Unsupported dataset: {}'.format(opts['dataset']))
 
-    data_loader = DataLoader(dataset, batch_size=1, shuffle=True, num_workers=0,
+    data_loader = DataLoader(dataset, batch_size=1, shuffle=False, num_workers=0,
                              collate_fn=dataset.collate_single)
 
     # Initialize_model

@@ -30,6 +30,14 @@ cycles_configure = {
         'min_size': 10,
         'max_size': 20,
         'lr': 5e-4,
-        'canonical_etypes': [('event', 'directy follows', 'event'), ('event', 'correlated to', 'entity type 1')],
+        'node_types': ['event', 'application', 'resource', 'offer'],
+        'edge_types': [':CORR', ':DF'],
+        'correlation_attributes': ['application', 'resource', 'offer'],
+        'edge_directions': ['to target', 'to source'],
+        'activity_labels': ['create application', 'application ready', 'create offer', 'send offer', 'offer cancelled'],
+        'canonical_etypes': [('event', ':DF', 'event'),
+                             ('event', ':CORR', 'application'),
+                             ('event', ':CORR', 'resource'),
+                             ('event', ':CORR', 'offer')],
     }
 }

@@ -275,7 +275,7 @@ class DGMG(nn.Module):
         super(DGMG, self).__init__()
 
         # Graph configuration
-        self.v_max = v_max
+        self.v_max = v_max # Maximum number of nodes in the graph
         self.metagraph = Metagraph(canonical_etypes=canonical_etypes)
 
         # Graph embedding module
