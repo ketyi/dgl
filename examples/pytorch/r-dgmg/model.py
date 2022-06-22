@@ -39,6 +39,7 @@ class Metagraph():
         self.empty_graph = dgl.heterograph(relations, num_nodes_dict=num_nodes)
 
 
+# Multi-relational graph readout function
 class GraphEmbed(nn.Module):
     def __init__(self, node_hidden_size, metagraph):
         super(GraphEmbed, self).__init__()
@@ -51,9 +52,11 @@ class GraphEmbed(nn.Module):
         self.node_gatings = nn.ModuleDict()
         self.node_to_graphs = nn.ModuleDict()
 
+        # We need to loop through the node types; it's sequential
+        # I don't know whether it's possible to parallelize it
         for metagraph_node in self.metagraph.nodes:
             self.node_gatings[metagraph_node] = nn.Sequential(
-                # node_hidden_size is the same now for all type of nodes
+                # node_hidden_size is the same now for all nodes types
                 nn.Linear(node_hidden_size, 1),
                 nn.Sigmoid()
             )
