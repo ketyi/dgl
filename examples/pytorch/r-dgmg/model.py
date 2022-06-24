@@ -75,6 +75,7 @@ class GraphEmbed(nn.Module):
             return torch.cat(embeddings, dim=0).sum(dim=0, keepdim=True)
 
 
+# noinspection DuplicatedCode
 class GraphProp(nn.Module):
     def __init__(self, num_prop_rounds, node_hidden_size):
         super(GraphProp, self).__init__()
@@ -89,7 +90,9 @@ class GraphProp(nn.Module):
         node_update_funcs = []
 
         for t in range(num_prop_rounds):
-            # input being [hv, hu, xuv]
+            # input being [vector hv, vector hu, scalar xuv]
+            # scalar xuv is meant to be the edge attribute
+            # I'm going to expand it into a vector xuv
             message_funcs.append(nn.Linear(2 * node_hidden_size + 1,
                                            self.node_activation_hidden_size))
 
@@ -102,7 +105,7 @@ class GraphProp(nn.Module):
         self.node_update_funcs = nn.ModuleList(node_update_funcs)
 
     def dgmg_msg(self, edges):
-        """For an edge u->v, return concat([h_u, x_uv])"""
+        """For an edge u->v, return concat([hu, xuv])"""
         return {'m': torch.cat([edges.src['hv'],
                                 edges.data['he']],
                                dim=1)}
@@ -121,10 +124,8 @@ class GraphProp(nn.Module):
             return
         else:
             for t in range(self.num_prop_rounds):
-                g.update_all(message_func=self.dgmg_msg,
-                             reduce_func=self.reduce_funcs[t])
-                g.ndata['hv'] = self.node_update_funcs[t](
-                    g.ndata['a'], g.ndata['hv'])
+                g.update_all(message_func=self.dgmg_msg, reduce_func=self.reduce_funcs[t])
+                g.ndata['hv'] = self.node_update_funcs[t](g.ndata['a'], g.ndata['hv'])
 
 
 def bernoulli_action_log_prob(logit, action):
@@ -150,6 +151,8 @@ class AddNode(nn.Module):
         self.metagraph = metagraph
 
         self.stop = 0
+        # Input is the graph readout vector
+        # Output is a vector with cardinality of node types + 1
         self.add_node = nn.Linear(graph_embed_func.graph_hidden_size, len(self.metagraph.nodes) + 1)
 
         # If to add a node, initialize its hv
