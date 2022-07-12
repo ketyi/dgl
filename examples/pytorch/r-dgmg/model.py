@@ -152,7 +152,7 @@ class AddNode(nn.Module):
 
         self.stop = 0
         # Input is the graph readout vector
-        # Output is a vector with cardinality of node types + 1
+        # Output is a vector with cardinality of node types + 1 (expressing the no-node/terminating option)
         self.add_node = nn.Linear(graph_embed_func.graph_hidden_size, len(self.metagraph.nodes) + 1)
 
         # If to add a node, initialize its hv
