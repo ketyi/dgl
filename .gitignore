@@ -167,6 +167,8 @@ config.cmake
 
 #istvan:
 examples/pytorch/r-dgmg/results/
-examples/pytorch/r-dgmg/docs/
 examples/pytorch/r-dgmg/bug_2.py
 examples/pytorch/r-dgmg/bug.py
+examples/pytorch/r-dgmg/docs/~$event_graph_generation_sequence_full_3-joint-edges.pptx
+examples/pytorch/r-dgmg/docs/event_graph_generation_sequence_full.pptx
+examples/pytorch/r-dgmg/docs/event_graph_generation_sequence.pptx
